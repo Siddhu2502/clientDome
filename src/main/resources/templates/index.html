@@ -1,16 +1,30 @@
+<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KMKM Orchestrator - clientdome</title>
+    <title>KMKM Orchestrator - clientDome</title>
     <link rel="stylesheet" th:href="@{/stylesheet.css}">
 </head>
 <body>
+    <div>
+        <p>To signup/login go to this page</p>
+        <a th:href="@{/loginsignup}">Login</a>
+    </div>
 
     <div class="content-wrapper">
-        <h1>Welcome to the KnowMe-KnowMe Verification System</h1>
-        <p>This is the main user interface agent.</p>
+        <!-- Use th:text to display the user's name -->
+        <h1 th:text="'Welcome, ' + ${userName} + '!'">Welcome, User!</h1>
+
+        <h2 th:text="'Your number is: ' + ${userNumber} ">This is your number.</h2>
+
+        <!-- Use th:text to display the user's login ID -->
+        <p th:text="'You are logged in as: ' + ${userLoginId}">This is the main user interface agent.</p>
+        
+        <hr style="margin: 2rem 0;">
+        
+        <p>This is where the chatbot interface will be built.</p>
     </div>
 
 </body>

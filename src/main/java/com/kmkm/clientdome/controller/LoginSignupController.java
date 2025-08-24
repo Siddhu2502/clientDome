@@ -58,7 +58,15 @@ public class LoginSignupController {
 
             Token validatedToken = authenticationService.validateSessionWithToken(sessionToken);
             // get phone number
-            String loginId = (String) validatedToken.getClaims().get("sub"); 
+            Map<String, Object> claims = validatedToken.getClaims();
+            String loginId = (String) claims.get("sub");
+            String name = (String) claims.get("name");
+            String phone = (String) claims.get("phone");
+
+            if (name == null || name.isBlank()){
+                name = "User name not returned";
+            }
+
             logger.info("Validated the user with the loginId: {}", loginId);
 
             // spring secrutiy 
@@ -71,6 +79,9 @@ public class LoginSignupController {
 
             HttpSession session = request.getSession(true);
             session.setAttribute("SPRING_SECURITY_CONTEXT", context);
+            session.setAttribute("USER_NAME", name);
+            session.setAttribute("USER_PHONE_NUMBER", phone);
+            session.setAttribute("USER_LOGIN_ID", loginId);
 
             logger.info("Spring security context created for the user {}", loginId);
 
