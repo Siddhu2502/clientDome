@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KMKM Verification - Sign In</title>
+    <link rel="stylesheet" th:href="@{/stylesheet.css}">
+    <!-- ** THE FIX IS HERE: We now use a specific, stable version of the SDK ** -->
+    <script src="https://cdn.jsdelivr.net/npm/@descope/web-component@latest/dist/index.js"></script>
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <descope-wc
+                project-id="P31VrLEaibrMFYwGQpzKrLNUChHQ"
+                flow-id="sign-up-or-in"
+                theme="dark">
+        </descope-wc>
+    </div>
+
+    <script>
+        const wcElement = document.querySelector('descope-wc');
+
+        const onSuccess = async (e) => {
+            console.log('Descope success event received:', e.detail);
+            
+            const sessionJwt = e.detail.sessionJwt; // Use the correct property name
+
+            if (!sessionJwt) {
+                console.warn('Success event fired without a sessionJwt. This is an intermediate step. Waiting for the final success event.');
+                return; // Ignore intermediate events
+            }
+
+            console.log('Final session JWT received. Proceeding with backend validation.');
+
+            try {
+                const response = await fetch('/api/validate-session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: sessionJwt })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    window.location.href = data.redirectUrl;
+                } else {
+                    console.error('Backend validation failed:', await response.text());
+                }
+            } catch (error) {
+                console.error('Error during backend validation fetch call:', error);
+            }
+        };
+
+        const onError = (err) => console.error('Descope login error:', err);
+
+        wcElement.addEventListener('success', onSuccess);
+        wcElement.addEventListener('error', onError);
+    </script>
+</body>
+</html>
