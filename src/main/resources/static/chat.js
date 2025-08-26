@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage(userMessage, 'user');
         messageInput.value = '';
 
-        // --- FIX PART 1: The Call ---
-        // We now pass a simple, single-word type: 'thinking'
         const thinkingIndicator = appendMessage('...', 'thinking');
 
         try {
