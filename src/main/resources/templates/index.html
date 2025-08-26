@@ -8,31 +8,51 @@
 </head>
 <body>
 
-    <div class="chat-container">
-        <!-- HEADER: Shows who is logged in. -->
-        <header class="chat-header">
-            <h1 th:text="'KMKM Verification'">Welcome!</h1>
-            <p th:text="'Logged in as: ' + ${userName} + ' (' + ${userLoginId} + ')'">User Info</p>
-        </header>
+    <!-- 1. This is the new parent container for the two-column layout -->
+    <div class="main-wrapper">
 
-        <!-- MAIN CHAT WINDOW: Where messages will appear. -->
-        <main id="chat-window" class="chat-window">
-            <!-- Messages will be dynamically added here by JavaScript -->
-            <div class="message bot-message">
-                <p>Welcome to the Know-Me-Know-Me verification system. I am your guide. To begin the KYC process, please type "start".</p>
+        <!-- 2. The chat container is now the first child -->
+        <div class="chat-container">
+            <!-- HEADER: Shows who is logged in. -->
+            <header class="chat-header">
+                <h1 th:text="'KMKM Verification'">Welcome!</h1>
+                <p th:text="'Logged in as: ' + ${userName} + ' (' + ${userLoginId} + ')'">User Info</p>
+            </header>
+
+            <!-- MAIN CHAT WINDOW: Where messages will appear. -->
+            <main id="chat-window" class="chat-window">
+                <div class="message bot-message">
+                    <p>Welcome to the Know-Me-Know-Me verification system. I am your guide. To begin the KYC process, please type "start".</p>
+                </div>
+            </main>
+
+            <!-- INPUT FORM: Where the user types their message. -->
+            <footer class="chat-footer">
+                <form id="chat-form" class="chat-form">
+                    <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off" required>
+                    <button type="submit">Send</button>
+                </form>
+            </footer>
+        </div>
+
+        <!-- 3. The sidebar is now the second child, a sibling to the chat container -->
+        <aside class="upload-sidebar">
+            <h2>Required Documents</h2>
+            <div class="upload-slot" data-doc-type="aadhar">
+                <span class="upload-icon">+</span>
+                <span class="upload-label">Aadhaar Card</span>
+                <span class="upload-status"></span>
             </div>
-        </main>
+            <button id="process-button" disabled>Process & Generate ID</button>
+        </aside>
 
-        <!-- INPUT FORM: Where the user types their message. -->
-        <footer class="chat-footer">
-            <form id="chat-form" class="chat-form">
-                <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off" required>
-                <button type="submit">Send</button>
-            </form>
-        </footer>
-    </div>
+    </div> <!-- End of main-wrapper -->
 
-    <!-- We will add our JavaScript file here in the next step -->
+    <!-- This hidden input is used by our JavaScript -->
+    <input type="file" id="file-upload-input" style="display: none;" />
+
+    <!-- 4. Corrected script order for best practice -->
+    <script th:src="@{/upload-handler.js}"></script>
     <script th:src="@{/chat.js}"></script>
 
 </body>

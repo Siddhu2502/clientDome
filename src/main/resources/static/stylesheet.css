@@ -184,3 +184,96 @@ body::before {
     border: 1px solid #a13030;
     color: #f8d0d0;
 }
+
+
+/* Main Layout Wrapper */
+.main-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Update chat-container to work within the flexbox layout */
+.chat-container {
+    flex-grow: 1; /* This makes it take up all available space */
+    /* It will inherit its height from the main-wrapper */
+}
+
+/* Sidebar Styling */
+.upload-sidebar {
+    flex-shrink: 0; /* Prevents the sidebar from shrinking */
+    width: 280px;
+    background-color: #0a1b30;
+    border-left: 1px solid #184058;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.upload-sidebar h2 {
+    margin: 0 0 1rem 0;
+    text-align: center;
+    color: #aaeaff;
+    font-size: 1.2rem;
+}
+
+.upload-slot {
+    background-color: #071226;
+    border: 2px dashed #184058;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.upload-slot:hover {
+    border-color: #2a5d77;
+    background-color: #0f2a43;
+}
+
+.upload-icon {
+    font-size: 1.5rem;
+    color: #6c98b3;
+}
+
+.upload-label {
+    color: #d0e8f8;
+    flex-grow: 1;
+}
+
+.upload-status {
+    font-size: 1.5rem; /* For the checkmark/cross icons */
+}
+
+#process-button {
+    margin-top: auto; /* Pushes the button to the bottom of the sidebar */
+    background-color: #2a5d77;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#process-button:disabled {
+    background-color: #184058;
+    cursor: not-allowed;
+    color: #6c98b3;
+}
+
+/* Add this to the end of your stylesheet.css */
+
+#process-button:not(:disabled) {
+    background-color: #2a9d8f; /* A success/go green color */
+    color: white;
+}
+
+#process-button:not(:disabled):hover {
+    background-color: #258a7e; /* A slightly darker green on hover */
+}

@@ -28,7 +28,7 @@ public class SecrutiyConfig {
                             .permitAll()
             )
             .oauth2Client(withDefaults())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/validate-session", "/api/chat")
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/validate-session", "/api/chat", "/api/upload")
             );
 
         return http.build();
