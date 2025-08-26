@@ -1,31 +1,39 @@
-<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KMKM Orchestrator - clientDome</title>
+    <title>KMKM Verification</title>
     <link rel="stylesheet" th:href="@{/stylesheet.css}">
 </head>
 <body>
-    <div>
-        <p>To signup/login go to this page</p>
-        <a th:href="@{/loginsignup}">Login</a>
+
+    <div class="chat-container">
+        <!-- HEADER: Shows who is logged in. -->
+        <header class="chat-header">
+            <h1 th:text="'KMKM Verification'">Welcome!</h1>
+            <p th:text="'Logged in as: ' + ${userName} + ' (' + ${userLoginId} + ')'">User Info</p>
+        </header>
+
+        <!-- MAIN CHAT WINDOW: Where messages will appear. -->
+        <main id="chat-window" class="chat-window">
+            <!-- Messages will be dynamically added here by JavaScript -->
+            <div class="message bot-message">
+                <p>Welcome to the Know-Me-Know-Me verification system. I am your guide. To begin the KYC process, please type "start".</p>
+            </div>
+        </main>
+
+        <!-- INPUT FORM: Where the user types their message. -->
+        <footer class="chat-footer">
+            <form id="chat-form" class="chat-form">
+                <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off" required>
+                <button type="submit">Send</button>
+            </form>
+        </footer>
     </div>
 
-    <div class="content-wrapper">
-        <!-- Use th:text to display the user's name -->
-        <h1 th:text="'Welcome, ' + ${userName} + '!'">Welcome, User!</h1>
-
-        <h2 th:text="'Your number is: ' + ${userNumber} ">This is your number.</h2>
-
-        <!-- Use th:text to display the user's login ID -->
-        <p th:text="'You are logged in as: ' + ${userLoginId}">This is the main user interface agent.</p>
-        
-        <hr style="margin: 2rem 0;">
-        
-        <p>This is where the chatbot interface will be built.</p>
-    </div>
+    <!-- We will add our JavaScript file here in the next step -->
+    <script th:src="@{/chat.js}"></script>
 
 </body>
 </html>

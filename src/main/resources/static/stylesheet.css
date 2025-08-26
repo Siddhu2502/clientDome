@@ -34,3 +34,153 @@ body::before {
     padding: 2rem;
     text-align: center;
 }
+
+/* Append this to your existing stylesheet.css */
+
+/*
+ * Chat Container Layout
+ * Uses Flexbox to create a full-height layout with a fixed header and footer.
+ */
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 800px;
+    margin: 0 auto;
+    border-left: 1px solid #184058;
+    border-right: 1px solid #184058;
+    background-color: rgba(0, 0, 0, 0.3); /* Slightly transparent black */
+}
+
+.chat-header {
+    padding: 1rem;
+    background-color: #0a1b30;
+    border-bottom: 1px solid #184058;
+    text-align: center;
+    flex-shrink: 0; /* Prevents header from shrinking */
+}
+
+.chat-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #aaeaff;
+}
+
+.chat-header p {
+    margin: 0.25rem 0 0;
+    font-size: 0.8rem;
+    color: #6c98b3;
+}
+
+/*
+ * Chat Window
+ * This is the main area for messages.
+ * flex-grow: 1 makes it take up all available space.
+ * overflow-y: auto enables scrolling for messages.
+ */
+.chat-window {
+    flex-grow: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/*
+ * Message Styling
+ */
+.message {
+    max-width: 80%;
+    padding: 0.75rem 1rem;
+    border-radius: 18px;
+    line-height: 1.4;
+}
+
+.bot-message {
+    background-color: #184058;
+    color: #d0e8f8;
+    border-bottom-left-radius: 4px;
+    align-self: flex-start; /* Aligns bot messages to the left */
+}
+
+.user-message {
+    background-color: #2a5d77;
+    color: #ffffff;
+    border-bottom-right-radius: 4px;
+    align-self: flex-end; /* Aligns user messages to the right */
+}
+
+.message p {
+    margin: 0;
+}
+
+/*
+ * Chat Footer and Input Form
+ */
+.chat-footer {
+    background-color: #0a1b30;
+    border-top: 1px solid #184058;
+    padding: 1rem;
+    flex-shrink: 0; /* Prevents footer from shrinking */
+}
+
+.chat-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.chat-form input {
+    flex-grow: 1;
+    background-color: #071226;
+    border: 1px solid #184058;
+    border-radius: 20px;
+    padding: 0.75rem 1rem;
+    color: #e0e0e0;
+    font-size: 1rem;
+}
+
+.chat-form input:focus {
+    outline: none;
+    border-color: #2a5d77;
+    box-shadow: 0 0 5px #2a5d77;
+}
+
+.chat-form button {
+    background-color: #2a5d77;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.chat-form button:hover {
+    background-color: #3b7a9e;
+}   
+
+/*
+ * Thinking Indicator Animation
+ * A simple pulse effect for the "..." message.
+ */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.thinking-message {
+    animation: pulse 1.5s infinite;
+}
+
+/*
+ * Error Message Styling
+ * To clearly distinguish when something goes wrong.
+ */
+.error-message {
+    background-color: #581818; /* A dark red */
+    border: 1px solid #a13030;
+    color: #f8d0d0;
+}

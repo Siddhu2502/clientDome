@@ -18,7 +18,8 @@ public class SecrutiyConfig {
         http.authorizeHttpRequests(
                 authorize -> authorize
                 // static resources allow
-                .requestMatchers("/stylesheet.css", "/css/**", "/js/**", "/images/**", "/loginsignup", "/api/validate-session")
+                .requestMatchers("/stylesheet.css", "/css/**", "/js/**", "/images/**", 
+                                 "/loginsignup", "/api/validate-session")
                 .permitAll()
                 .anyRequest().permitAll()
             )
@@ -27,7 +28,7 @@ public class SecrutiyConfig {
                             .permitAll()
             )
             .oauth2Client(withDefaults())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/validate-session")
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/validate-session", "/api/chat")
             );
 
         return http.build();
