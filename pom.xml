@@ -70,6 +70,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
+		<dependency>
 			<artifactId>java-sdk</artifactId>
 			<groupId>com.descope</groupId>
 			<version>1.0.50</version>

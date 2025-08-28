@@ -47,7 +47,7 @@ public class LoginSignupController {
     // validate the login api endpoint thing
     @PostMapping("/api/validate-session")
     @ResponseBody
-    public ResponseEntity<?> validateSession(@RequestBody Map<String, String> payload, HttpServletRequest request){
+    public ResponseEntity<Map<String, Object>> validateSession(@RequestBody Map<String, String> payload, HttpServletRequest request){
         // check for session token
         String sessionToken = payload.get("token");
         if (sessionToken == null || sessionToken.isBlank()) {

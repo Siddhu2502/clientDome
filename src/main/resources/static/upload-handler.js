@@ -1,27 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // === NEW: DEFINE THE GOAL AND TRACK STATE ===
-    // This is our client-side "checklist". It must match the backend.
-    // For your test, it's just 'aadhar'. Later, add the others back.
-    const REQUIRED_DOCS = ['aadhar'];
-    
-    // A Set is an efficient way to store which docs we've successfully uploaded.
+    // --- STATE AND GOAL DEFINITION ---
+    // This checklist must be updated when you add more documents to the HTML.
+    const REQUIRED_DOCS = ['aadhar']; 
     const uploadedDocs = new Set();
     
-    // Get a reference to the button we need to enable.
+    // --- ELEMENT REFERENCES ---
     const processButton = document.getElementById('process-button');
-    // === END NEW ===
-
     const fileInput = document.getElementById('file-upload-input');
     const uploadSlots = document.querySelectorAll('.upload-slot');
     let currentDocType = null;
 
+    // --- EVENT LISTENER 1: Clicking an upload slot ---
+    // This triggers the hidden file input.
     uploadSlots.forEach(slot => {
         slot.addEventListener('click', () => {
             currentDocType = slot.getAttribute('data-doc-type');
-            fileInput.click(); // Trigger the hidden file input
+            fileInput.click();
         });
     });
 
+    // --- EVENT LISTENER 2: Selecting a file ---
+    // This handles the actual file upload to the backend.
     fileInput.addEventListener('change', async (event) => {
         const file = event.target.files[0];
         if (!file || !currentDocType) return;
@@ -45,17 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
             console.log('Upload successful:', result);
 
-            // Update the UI for this specific slot
             statusElement.textContent = '✅';
             slot.style.borderColor = '#2a9d8f';
 
-            // === NEW: TRACK PROGRESS AND CHECK FOR COMPLETION ===
-            // Add the successfully uploaded doc type to our Set.
             uploadedDocs.add(result.docType);
-            
-            // Run the check to see if we're done.
-            checkCompletion();
-            // === END NEW ===
+            checkCompletion(); // Check if all files are now uploaded
 
         } catch (error) {
             console.error('Error uploading file:', error);
@@ -63,19 +56,50 @@ document.addEventListener('DOMContentLoaded', () => {
             slot.style.borderColor = '#e76f51';
         }
         
-        event.target.value = '';
+        event.target.value = ''; // Reset input to allow re-uploading the same file
     });
 
-    // === NEW: THE COMPLETION CHECKER FUNCTION ===
+    // --- COMPLETION CHECKER FUNCTION ---
+    // This function checks our progress against our goal.
     function checkCompletion() {
-        // The .every() method checks if ALL items in our required list
-        // are present in our 'uploadedDocs' Set.
         const allDocsUploaded = REQUIRED_DOCS.every(doc => uploadedDocs.has(doc));
-
         if (allDocsUploaded) {
-            console.log('All required documents have been uploaded. Enabling process button.');
+            console.log('All required documents uploaded. Enabling process button.');
             processButton.disabled = false;
         }
     }
-    // === END NEW ===
+
+    // === THIS IS THE NEW PART YOU WERE ASKING ABOUT ===
+    // --- EVENT LISTENER 3: Clicking the process button ---
+    // This triggers the backend orchestration.
+    processButton.addEventListener('click', async () => {
+        // Disable button to prevent multiple clicks and show feedback
+        processButton.disabled = true;
+        processButton.textContent = 'Processing...';
+
+        try {
+            const response = await fetch('/api/process-kyc', {
+                method: 'POST',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Server responded with status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            console.log('Processing result:', result);
+            
+            processButton.textContent = 'Processing Complete!';
+            // In a real app, we'd add the final ID to the chat. For now, an alert is fine.
+            alert('KYC Processing initiated successfully! The response from aadharDome is in the server logs and browser console.');
+
+        } catch (error) {
+            console.error('Failed to trigger KYC process:', error);
+            processButton.textContent = 'Error! Retry?';
+            processButton.disabled = false; // Re-enable button on error
+            alert(`An error occurred: ${error.message}`);
+        }
+    });
+    // === END OF THE NEW PART ===
 });
