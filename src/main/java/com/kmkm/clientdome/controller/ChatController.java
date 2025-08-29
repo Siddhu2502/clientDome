@@ -117,14 +117,18 @@ public class ChatController {
 
         Map<String, String> uploadedFiles = (Map<String, String>) session.getAttribute("uploadedFiles");
 
+        System.out.println("Uploaded files:");
+        uploadedFiles.forEach((key, value) -> System.out.println(" - " + key + ": " + value));  
+
         if (uploadedFiles == null || !uploadedFiles.containsKey("aadhar")) {
             return Mono.just(ResponseEntity.badRequest().body(Map.of("error", "Aadhaar document not found.")));
         }
 
         String aadharPath = uploadedFiles.get("aadhar");
 
-        return orchestrationService.processAadhar(aadharPath)
+        return orchestrationService.processAadhaar(aadharPath)
                 .map(response -> ResponseEntity.ok(Map.of("status", "success", "aadhaarResponse", response)))
-                .doOnError(e -> System.err.println("Error during KYC processing: " + e.getMessage()));
+                .doOnError(e -> System.err.println("Error during KYC processing: " + e.getMessage()))
+                .onErrorReturn(ResponseEntity.status(500).body(Map.of("error", "Failed to process KYC. Check server logs.")));
     }
 }

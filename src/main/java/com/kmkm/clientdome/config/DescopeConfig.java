@@ -23,7 +23,6 @@ public class DescopeConfig {
 
     @Bean
     public AuthenticationService authenticationService(DescopeClient descopeClient){
-        // FIX: update from the docs (java) new sdk no getAuthenticationServices instead just getAuthService.
         return descopeClient.getAuthenticationServices().getAuthService();
     }
 }

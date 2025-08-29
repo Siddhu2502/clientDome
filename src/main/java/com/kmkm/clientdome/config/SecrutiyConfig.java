@@ -1,6 +1,5 @@
 package com.kmkm.clientdome.config;
 
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,21 +13,23 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecrutiyConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-        http.authorizeHttpRequests(
-                authorize -> authorize
-                // static resources allow
-                .requestMatchers("/stylesheet.css", "/css/**", "/js/**", "/images/**", 
-                                 "/loginsignup", "/api/validate-session")
-                .permitAll()
-                .anyRequest().permitAll()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(
+                    "/loginsignup",
+                    "/api/validate-session",
+                    "/stylesheet.css",
+                    "/chat.js",
+                    "/upload-handler.js",
+                    "/js/**",
+                    "/images/**"
+                ).permitAll()
+                .anyRequest().authenticated()
             )
-            .formLogin(
-                form -> form.loginPage("/loginsignup")
-                            .permitAll()
-            )
-            .oauth2Client(withDefaults())
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/validate-session", "/api/chat", "/api/upload", "/api/process-kyc", "/mock-extract")
+            .oauth2Login(withDefaults())
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers("/api/**")
             );
 
         return http.build();

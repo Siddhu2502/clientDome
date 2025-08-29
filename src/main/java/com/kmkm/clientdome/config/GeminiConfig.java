@@ -13,8 +13,6 @@ public class GeminiConfig {
 
     @Bean
     public Client geminiClient() {
-        // This pattern is taken directly from page 2 of your documentation.
-        // It correctly builds the client for the pure Gemini API.
         return Client.builder().apiKey(apiKey).build();
     }
 }
