@@ -27,6 +27,12 @@ public class OAuth2ClientConfig {
     private String tokenUri;
 
     @Bean
+    // equivalent of the following curl command
+    /*
+     * curl -u "<projectid>=:<secret>" 
+     * -d "grant_type=client_credentials&scope=doc:extract:aadhaar" 
+     * https://api.descope.com/oauth2/v1/apps/token
+     */
     public ClientRegistrationRepository clientRegistrationRepository() {
         // This is the Java equivalent of successful curl command.
         ClientRegistration descopeClient = ClientRegistration.withRegistrationId("descope-m2m")
