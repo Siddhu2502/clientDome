@@ -38,7 +38,12 @@ public class OAuth2ClientConfig {
         ClientRegistration descopeClient = ClientRegistration.withRegistrationId("descope-m2m")
                 .clientId(this.clientId) // The Composite ID
                 .clientSecret(this.clientSecret) // secret
-                .scope("doc:extract:aadhaar")
+                .scope(
+                        "doc:extract:aadhaar", 
+                        "doc:extract:pan", 
+                        "doc:extract:marksheet", 
+                        "face:analyze", 
+                        "kyc:validate")
                 .tokenUri(this.tokenUri) // The generic token URI
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
