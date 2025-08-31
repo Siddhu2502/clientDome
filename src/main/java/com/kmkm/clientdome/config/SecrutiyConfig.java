@@ -15,16 +15,22 @@ public class SecrutiyConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers(
-                    "/loginsignup",
-                    "/api/validate-session",
-                    "/stylesheet.css",
-                    "/chat.js",
-                    "/upload-handler.js",
-                    "/js/**",
-                    "/images/**"
-                ).permitAll()
+        .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(
+                // Login/Session management
+                "/loginsignup",
+                "/api/validate-session",
+
+                // Main chat page assets
+                "/stylesheet.css",
+                "/chat.js",
+                "/upload-handler.js",
+                "/result-stylesheet.css",
+                "/result-handler.js",
+
+                "/js/**",
+                "/images/**"
+            ).permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(withDefaults())

@@ -21,4 +21,9 @@ public class HomeController {
 
         return "index";
     }
+
+    @GetMapping("/result")
+    public String resultPage() {
+        return "result";
+    }
 }

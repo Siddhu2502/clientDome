@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // --- STATE AND GOAL DEFINITION ---
     // This checklist must be updated when you add more documents to the HTML.
-    const REQUIRED_DOCS = ['aadhar']; 
+    const REQUIRED_DOCS = ['aadhar', 'pan','marksheet'];
     const uploadedDocs = new Set();
     
     // --- ELEMENT REFERENCES ---
@@ -72,34 +72,37 @@ document.addEventListener('DOMContentLoaded', () => {
     // === THIS IS THE NEW PART YOU WERE ASKING ABOUT ===
     // --- EVENT LISTENER 3: Clicking the process button ---
     // This triggers the backend orchestration.
-    processButton.addEventListener('click', async () => {
-        // Disable button to prevent multiple clicks and show feedback
-        processButton.disabled = true;
-        processButton.textContent = 'Processing...';
+processButton.addEventListener('click', async () => {
+    processButton.disabled = true;
+    processButton.textContent = 'Processing...';
 
-        try {
-            const response = await fetch('/api/process-kyc', {
-                method: 'POST',
-            });
+    try {
+        const response = await fetch('/api/process-kyc', {
+            method: 'POST',
+        });
+        const result = await response.json();
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `Server responded with status: ${response.status}`);
-            }
-
-            const result = await response.json();
-            console.log('Processing result:', result);
-            
-            processButton.textContent = 'Processing Complete!';
-            // In a real app, we'd add the final ID to the chat. For now, an alert is fine.
-            alert('KYC Processing initiated successfully! The response from aadharDome is in the server logs and browser console.');
-
-        } catch (error) {
-            console.error('Failed to trigger KYC process:', error);
-            processButton.textContent = 'Error! Retry?';
-            processButton.disabled = false; // Re-enable button on error
-            alert(`An error occurred: ${error.message}`);
+        if (!response.ok) {
+            throw new Error(result.error || `Server responded with status: ${response.status}`);
         }
-    });
-    // === END OF THE NEW PART ===
+        
+        console.log('Final validation successful. Redirecting with:', result);
+        
+        const status = result.status || 'ERROR';
+        const kmkmId = result.kmkmId || '';
+        const reason = result.reason || 'An unknown error occurred.';
+
+        // THE FIX: Use encodeURIComponent on ALL parameters to handle any special characters.
+        const queryString = `status=${encodeURIComponent(status)}&kmkmId=${encodeURIComponent(kmkmId)}&reason=${encodeURIComponent(reason)}`;
+        
+        window.location.href = `/result?${queryString}`;
+        
+    } catch (error) {
+        console.error('Failed to trigger KYC process:', error);
+        processButton.textContent = 'Error! Retry?';
+        processButton.disabled = false;
+        alert(`An error occurred: ${error.message}`);
+    }
+});
+
 });

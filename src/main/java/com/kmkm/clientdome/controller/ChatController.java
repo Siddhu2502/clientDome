@@ -110,25 +110,56 @@ public class ChatController {
         return ResponseEntity.ok(Map.of("message", "File uploaded success", "docType", docType));
     }
 
+    // globalized for adding more and more parallel agents
     @PostMapping("/api/process-kyc")
-    public Mono<ResponseEntity<Map<String,String>>> processKyc(HttpSession session) {
-
-        System.out.println("KYC PROCESSING TRIGGERED");
-
+    public Mono<ResponseEntity<Map<String, Object>>> processKyc(HttpSession session) {
+        System.out.println("FULL KYC ORCHESTRATION TRIGGERED");
+        @SuppressWarnings("unchecked")
         Map<String, String> uploadedFiles = (Map<String, String>) session.getAttribute("uploadedFiles");
 
-        System.out.println("Uploaded files:");
-        uploadedFiles.forEach((key, value) -> System.out.println(" - " + key + ": " + value));  
-
-        if (uploadedFiles == null || !uploadedFiles.containsKey("aadhar")) {
-            return Mono.just(ResponseEntity.badRequest().body(Map.of("error", "Aadhaar document not found.")));
+        if (uploadedFiles == null || !uploadedFiles.containsKey("aadhar") || !uploadedFiles.containsKey("pan") || !uploadedFiles.containsKey("marksheet")) {
+            return Mono.just(ResponseEntity.badRequest().body(Map.of("error", "Required documents are missing.")));
         }
 
-        String aadharPath = uploadedFiles.get("aadhar");
+        String aadhaarPath = uploadedFiles.get("aadhar");
+        String panPath = uploadedFiles.get("pan");
+        String marksheetPath = uploadedFiles.get("marksheet");
 
-        return orchestrationService.processAadhaar(aadharPath)
-                .map(response -> ResponseEntity.ok(Map.of("status", "success", "aadhaarResponse", response)))
-                .doOnError(e -> System.err.println("Error during KYC processing: " + e.getMessage()))
-                .onErrorReturn(ResponseEntity.status(500).body(Map.of("error", "Failed to process KYC. Check server logs.")));
-    }
+        // STAGE 1: Run all extractor agents in parallel
+        Mono<Map<String, String>> aadhaarResponseMono = orchestrationService.processAadhaar(aadhaarPath);
+        Mono<Map<String, String>> panResponseMono = orchestrationService.processPan(panPath);
+        Mono<Map<String, String>> marksheetResponseMono = orchestrationService.processMarksheet(marksheetPath);
+
+        return Mono.zip(aadhaarResponseMono, panResponseMono, marksheetResponseMono)
+            .flatMap(tuple -> {
+                // This block executes after all extractors have successfully completed.
+                Map<String, String> aadhaarResult = tuple.getT1();
+                Map<String, String> panResult = tuple.getT2();
+                Map<String, String> marksheetResult = tuple.getT3();
+
+                // Extract only the core data string to pass to the validator
+                String aadhaarData = aadhaarResult.getOrDefault("extractedData", "");
+                String panData = panResult.getOrDefault("extractedData", "");
+                String marksheetData = marksheetResult.getOrDefault("extractedData", "");
+
+                // Create the payload for the validator agent
+                Map<String, String> validationPayload = Map.of(
+                    "aadhaarData", aadhaarData,
+                    "panData", panData,
+                    "marksheetData", marksheetData
+                );
+                
+                // STAGE 2: Chain the result into the final validation call
+                System.out.println("All extractions complete. Handing off to validatorDome...");
+                return orchestrationService.validateKycData(validationPayload);
+            })
+            .map(finalResult -> {
+                // This block executes after the validatorDome returns its verdict.
+                return ResponseEntity.ok(finalResult);
+            })
+            .doOnError(e -> System.err.println("Error during full KYC orchestration: " + e.getMessage()))
+            .onErrorReturn(
+                ResponseEntity.status(500).body(Map.of("error", "A critical error occurred during KYC processing."))
+            );
+    }    
 }
