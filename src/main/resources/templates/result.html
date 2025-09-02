@@ -8,54 +8,58 @@
 </head>
 <body>
 
-    <!-- This is the lava lamp background scene from your example -->
-    <div class="scene">
-        <div class="lava-lamp" style="--height: 400; --width: 150">
-            <div class="lava-lamp__main">
-                <div class="lava-lamp__glass">
-                    <!-- Multiple lava layers for a more dynamic effect -->
-                    <div class="lava-lamp__lava">
-                        <svg>
-                            <circle class="blob" r="21.5" cx="103" cy="400" style="--skewX: 1; --skewY: 5; --height: 43; --speed: 21; --delay: -7;"></circle>
-                            <circle class="blob" r="48.5" cx="77" cy="400" style="--skewX: 4; --skewY: 3; --height: 97; --speed: 21; --delay: -8;"></circle>
-                        </svg>
-                    </div>
-                    <div class="lava-lamp__lava">
-                        <svg>
-                           <circle class="blob" r="49" cx="112" cy="400" style="--skewX: 5; --skewY: 3; --height: 98; --speed: 25; --delay: -6;"></circle>
-                           <circle class="blob" r="29" cx="49" cy="400" style="--skewX: -5; --skewY: 0; --height: 58; --speed: 36; --delay: 0;"></circle>
-                        </svg>
+    <!-- === NEW: A Flexbox wrapper for the side-by-side layout === -->
+    <div class="result-wrapper">
+
+        <!-- The lava lamp scene, now a flex item -->
+        <div class="scene">
+            <div class="lava-lamp" style="--height: 400; --width: 150">
+                <div class="lava-lamp__main">
+                    <div class="lava-lamp__glass">
+                        <div class="lava-lamp__lava">
+                            <svg>
+                                <circle class="blob" r="21.5" cx="103" cy="400" style="--skewX: 1; --skewY: 5; --height: 43; --speed: 21; --delay: -7;"></circle>
+                                <circle class="blob" r="48.5" cx="77" cy="400" style="--skewX: 4; --skewY: 3; --height: 97; --speed: 21; --delay: -8;"></circle>
+                            </svg>
+                        </div>
+                        <div class="lava-lamp__lava">
+                            <svg>
+                               <circle class="blob" r="49" cx="112" cy="400" style="--skewX: 5; --skewY: 3; --height: 98; --speed: 25; --delay: -6;"></circle>
+                               <circle class="blob" r="29" cx="49" cy="400" style="--skewX: -5; --skewY: 0; --height: 58; --speed: 36; --delay: 0;"></circle>
+                            </svg>
+                        </div>
                     </div>
                 </div>
+                <div class="lava-lamp__base"></div>
             </div>
-            <div class="lava-lamp__base"></div>
+            <svg style="position: absolute; left: 100%">
+                <defs>
+                    <filter id="goo">
+                        <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="BLUR"></feGaussianBlur>
+                        <feColorMatrix in="BLUR" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="GOO"></feColorMatrix>
+                        <feBlend in="SourceGraphic" in2="goo"></feBlend>
+                    </filter>
+                </defs>
+            </svg>
         </div>
-        <svg style="position: absolute; left: 100%">
-            <defs>
-                <filter id="goo">
-                    <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="BLUR"></feGaussianBlur>
-                    <feColorMatrix in="BLUR" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="GOO"></feColorMatrix>
-                    <feBlend in="SourceGraphic" in2="goo"></feBlend>
-                </filter>
-            </defs>
-        </svg>
-    </div>
 
-    <!-- This is the new Identity Profile Card that sits on top -->
-    <div id="profile-card" class="profile-card">
-        <div class="card-header">
-            <h1>KYC Verification Complete</h1>
-            <h2 id="verification-status">STATUS PENDING</h2>
+        <!-- The Identity Profile Card, now a flex item -->
+        <div id="profile-card" class="profile-card">
+            <div class="card-header">
+                <h1>KYC Verification Complete</h1>
+                <h2 id="verification-status">STATUS PENDING</h2>
+            </div>
+            <div class="card-body">
+                <p class="label">Your Unique Know-Me-Know-Me ID:</p>
+                <p id="kmkm-id" class="id-display">Generating...</p>
+                <p class="label">Verification Details:</p>
+                <p id="verification-reason" class="reason-display">Awaiting final verdict from the validator...</p>
+            </div>
+            <div class="card-footer">
+                <p>This ID is your secure, verifiable digital identity within the KMKM ecosystem.</p>
+            </div>
         </div>
-        <div class="card-body">
-            <p class="label">Your Unique Know-Me-Know-Me ID:</p>
-            <p id="kmkm-id" class="id-display">Generating...</p>
-            <p class="label">Verification Details:</p>
-            <p id="verification-reason" class="reason-display">Awaiting final verdict from the validator...</p>
-        </div>
-        <div class="card-footer">
-            <p>This ID is your secure, verifiable digital identity within the KMKM ecosystem.</p>
-        </div>
+
     </div>
 
     <script th:src="@{/result-handler.js}"></script>

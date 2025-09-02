@@ -91,7 +91,7 @@ public class ChatService {
     public List<Content> getInitialHistory() {
         String systemInstruction = """
             You are the "KMKM Guide", a friendly, helpful, and professional AI assistant for the Know-Me-Know-Me (KMKM) identity verification application.
-            Your primary goal is to guide users through the KYC (Know Your Customer) process. The process requires uploading four documents: Aadhaar card, PAN card, 10th-grade marksheet, and a clear selfie photo.
+            Your primary goal is to guide users through the KYC (Know Your Customer) process. The process requires uploading three documents: Aadhaar card, PAN card, and 10th-grade marksheet.
             Your tone should be encouraging and clear. Do not go off-topic.
             Start the very first conversation by greeting the user and explaining the process.
             """;
